@@ -1,7 +1,9 @@
-const express = require("express");
+import express from "express";
+import path from "path";
+import { currentPlayer } from "../types";
+import { Characters, RoleHandler, charactersinfo } from "./data";
 const app = express();
 const PORT = process.env.PORT || 3000;
-import path from "path";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -13,7 +15,39 @@ app.set("views", path.join(__dirname, "views"));
 
 // routers
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", {
+    characters: charactersinfo,
+    team: currentPlayer.army,
+  });
+});
+app.get("/add", (req, res) => {
+  if (currentPlayer.selectedCharacter) {
+    currentPlayer.army.push(currentPlayer.selectedCharacter);
+    currentPlayer.selectedCharacter = undefined;
+  }
+
+  console.log(currentPlayer.army);
+  res.render("partials/team", {
+    team: currentPlayer.army,
+  });
+});
+app.get("/reset", (req, res) => {
+  currentPlayer.army = [];
+  currentPlayer.selectedCharacter = undefined;
+  res.render("partials/team", {
+    team: currentPlayer.army,
+  });
+});
+app.get("/select/:characterId", (req, res) => {
+  console.log(req.params);
+  const character = Characters.getCharacter(parseInt(req.params.characterId));
+
+  currentPlayer.selectedCharacter = character;
+
+  res.render("partials/selectedCharacter", {
+    character: character.info,
+    role: RoleHandler.getRole(character.roleType),
+  });
 });
 
 // server listening

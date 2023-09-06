@@ -1,7 +1,7 @@
 export enum CharacterName {
   BRIMSTONE = "brimstone",
   PHOENIX = "phoenix",
-  Sage = "sage",
+  SAGE = "sage",
   SOVA = "sova",
   VIPER = "viper",
   CYPHER = "cypher",
@@ -28,23 +28,61 @@ export enum CharacterRole {
   SENTINEL = "SENTINEL",
 }
 
-class Character {
-  public name: CharacterName;
-  public role: CharacterRole;
-  constructor(name: CharacterName, role: CharacterRole) {
-    this.name = name;
-    this.role = role;
-  }
+export class Character {
+  constructor(
+    public name: CharacterName,
+    public roleType: CharacterRole,
+    public id: number,
+    public description: string,
+    public icon: CharacterImageType,
+    public full: CharacterImageType,
+    public backgroundColor: string
+  ) {}
 
   public get info(): CharacterInfo {
     return {
       name: this.name,
-      role: this.role,
+      roleType: this.roleType,
+      id: this.id,
+      description: this.description,
+      backgroundColor: "#a73c01",
+      images: {
+        full: this.full,
+        icon: this.icon,
+      },
     };
   }
 }
-
-interface CharacterInfo {
+export type RoleType = {
+  id: number;
+  name: CharacterRole;
+  description: string;
+};
+type CharacterImageType = {
+  url: string;
+  rotation?: number;
+  scale?: number;
+  x?: number;
+  y?: number;
+};
+export interface CharacterInfo {
   name: CharacterName;
-  role: CharacterRole;
+  roleType: CharacterRole;
+  backgroundColor?: string;
+  id: number;
+  description: string;
+  images: {
+    icon: CharacterImageType;
+    full: CharacterImageType;
+  };
 }
+
+export class Player {
+  army: Character[];
+  selectedCharacter: Character | null;
+  constructor() {
+    this.selectedCharacter = null;
+    this.army = [];
+  }
+}
+export const currentPlayer = new Player();

@@ -1,10 +1,53 @@
 <%-include("./partials/header")-%>
-  <body hx-get="messages" class="bg-teal-600 flex justify-center items-center">
-    <main class=" ">
-      <h1 class="text-white font-extrabold text-center text-4xl">Hello World</h1>
+  <script type="text/javascript">
+        function codeAddress() {
+        document.querySelectorAll('.agent').forEach(node => {
+          console.log(node.getAttribute('data-bg-color'))
+        })
+        }
+        window.onload = codeAddress;
+        </script>
 
-      <img src="images/full/astra_full.png" alt="asdf" />
-      <p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, modi.</p>
+
+
+  <body hx-get="messages"  class="items-center flex">
+    <main>
+
+      <div class="absolute top-0 -z-10" id="selectedcharacter">
+         
+      </div>
+
+      <div id="team">
+
+<%-include("./partials/team")-%>
+      </div>
+      <div class="flex  flex-wrap">
+        <% for (let i=0; i < characters.length; i++) { %>
+
+          <div data-bg-color="<%= characters[i].backgroundColor %>" 
+          class="agent" on:click="JavaScript:setBackgroundColor('#fffba3')"  hx-target="#selectedcharacter" hx-swap="innerHTML" hx-get="/select/<%= characters[i].id %>" hx-swap="innerhtml">
+
+
+
+            <p hx-get="/add">
+              <%= characters[i].name %>
+            </p>
+            <img src="<%= characters[i].images.icon.url %>" alt="">
+          </div>
+
+          <% } %>
+
+      </div>
+      <div   class="flex gap-2 z-30 justify-center">
+          <button hx-target="#team" hx-get="add">
+          Select
+          </button>
+          <button hx-target="#team" hx-get="reset">
+          reset
+          </button>
+      </div>
     </main>
+
   </body>
-</html>
+
+  </html>

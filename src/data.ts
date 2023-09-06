@@ -3,8 +3,10 @@ import {
   CharacterInfo,
   CharacterName,
   CharacterRole,
+  CharacterSelect,
   RoleType,
 } from "../types";
+import { HabilityFactory } from "./views/Habilities";
 
 export const classInfo: Record<CharacterRole, RoleType> = {
   DUELIST: {
@@ -63,6 +65,32 @@ export class RoleHandler {
     throw new Error("role not found");
   }
 }
+export class CharactersSelectList {
+  availableCharacters: Map<number, CharacterSelect>;
+
+  constructor(characters: Character[]) {
+    this.availableCharacters = new Map();
+    characters.forEach((character) => {
+      this.availableCharacters.set(
+        character.info.id,
+        new CharacterSelect(character.info, true)
+      );
+    });
+  }
+  get allCharacters() {
+    return Array.from(this.availableCharacters.values());
+  }
+  reset() {
+    this.availableCharacters.forEach((ch: CharacterSelect) => {
+      ch.isValid = true;
+    });
+  }
+  setUnavailable(characterId: number) {
+    if (this.availableCharacters.has(characterId)) {
+      this.availableCharacters.get(characterId)!.isValid = false;
+    }
+  }
+}
 
 export const charactersinfo: CharacterInfo[] = [
   {
@@ -71,6 +99,9 @@ export const charactersinfo: CharacterInfo[] = [
     id: 0,
     backgroundColor: "#f39353",
     description: `Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and from a distance makes him an unmatched boots-on-the-ground commander.`,
+    habilities: HabilityFactory.getHabilitiesByCharacter(
+      CharacterName.BRIMSTONE
+    ),
     images: {
       icon: {
         url: Characters.getImagePath(CharacterName.BRIMSTONE, "icon"),

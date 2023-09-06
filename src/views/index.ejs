@@ -1,50 +1,84 @@
 <%-include("./partials/header")-%>
-  <script type="text/javascript">
-        function codeAddress() {
-        document.querySelectorAll('.agent').forEach(node => {
-          const color  = (node.getAttribute('data-bg-color'))
-          node.addEventListener('click', e => {
-            document.getElementById("body").style.backgroundColor = color
-          })
-        })
-        }
-        window.onload = codeAddress;
-        </script>
+<script type="text/javascript">
+  function setup() {
+    document.querySelectorAll('.agent').forEach(node => {
+      const color = (node.getAttribute('data-bg-color'));
+      node.addEventListener('click', e => {
+        document.getElementById("body").style.backgroundColor = color;
+      });
+    });
+    // Select the target node.
+
+    var teamObserverTarget = document.querySelector('#team')
+    const grayscaleTeam = () => {
+
+      const ids = [];
+      const elemnts = document.querySelectorAll('#team [data-agent-id]')
+      elemnts.forEach(element => {
+        ids.push(element.getAttribute('data-agent-id'))
+      })
+      ids.forEach(id => {
+        console.log(id)
+        $(`*[data-selecting-agent-id="${id}"]`).attr('disabled', true)
+
+        // element?.classList.add("disabled:bg-gray-300")
+      })
+    }
+    grayscaleTeam()
+
+    // Create an observer instance.
+    var observer = new MutationObserver(function(mutations) {
+      grayscaleTeam()
+    });
+
+    // Pass in the target node, as well as the observer options.
+    observer.observe(teamObserverTarget, {
+      attributes: true,
+      childList: true,
+      characterData: true
+    });
+  }
+  window.onload = setup;
+</script>
 
 
 
-  <body  id='body' class="items-center flex">
-    <main>
+<body id='body' class="items-center flex">
+  <main>
 
-      <div class="absolute top-0 -z-10" id="selectedcharacter">
-         
-      </div>
+    <div class="absolute top-0 -z-10" id="selectedcharacter">
 
-      <div id="team">
+    </div>
 
-<%-include("./partials/team")-%>
-      </div>
-      <div class="flex  flex-wrap">
-        <% for (let i=0; i < characters.length; i++) { %>
+    <div id="team">
 
-          <div data-bg-color="<%= characters[i].backgroundColor %>" 
-          class="agent"   hx-target="#selectedcharacter" hx-swap="innerHTML" hx-get="/select/<%= characters[i].id %>" hx-swap="innerhtml">
-            <img src="<%= characters[i].icon.url %>" alt="">
-          </div>
+      <%-include("./partials/team")-%>
+    </div>
+    <div class="flex  flex-wrap">
+      <% for (let i=0; i < characters.length; i++) { %>
 
-          <% } %>
+      <button data-selecting-agent-id="<%= characters[i].id %>" data-bg-color="<%= characters[i].backgroundColor %>" class="agent disabled:bg-gray-300 disabled:filter disabled:grayscale disabled:shadow-xl disabled:cursor-pointer" hx-target="#selectedcharacter" hx-swap="innerHTML" hx-get="/select/<%= characters[i].id %>" hx-swap="innerhtml">
+        <img src="<%= characters[i].icon.url %>" alt="">
+      </button>
+      <% } %>
 
-      </div>
-      <div   class="flex gap-2 z-30 justify-center">
-          <button hx-target="#team" hx-get="add">
-          Select
-          </button>
-          <button hx-target="#team" hx-get="reset">
-          reset
-          </button>
-      </div>
-    </main>
+    </div>
+    <div class="flex gap-2 z-30 justify-center">
+      <% if (canSelectMore) { %>
+      <button hx-target="#team" hx-get="add" hx-post="add">
+        Select
+      </button>
+      <% } else { %>
+      <button hx-target="#team" hx-get="submit">
+        Select
+      </button>
+      <% } %>
+      <button hx-target="#team" hx-get="reset">
+        reset
+      </button>
+    </div>
+  </main>
 
-  </body>
+</body>
 
-  </html>
+</html>

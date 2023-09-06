@@ -1,3 +1,9 @@
+import {
+  BaseHability,
+  CharacterAbility,
+  HabilityFactory,
+} from "./src/views/Habilities";
+
 export enum CharacterName {
   BRIMSTONE = "brimstone",
   PHOENIX = "phoenix",
@@ -29,6 +35,7 @@ export enum CharacterRole {
 }
 
 export class Character {
+  habilities: BaseHability[];
   constructor(
     public name: CharacterName,
     public roleType: CharacterRole,
@@ -37,13 +44,16 @@ export class Character {
     public icon: CharacterImageType,
     public full: CharacterImageType,
     public backgroundColor: string
-  ) {}
+  ) {
+    this.habilities = [];
+  }
 
   public get info(): CharacterInfo {
     return {
       name: this.name,
       roleType: this.roleType,
       id: this.id,
+      habilities: HabilityFactory.getHabilitiesByCharacter(this.name),
       description: this.description,
       backgroundColor: this.backgroundColor,
       images: {
@@ -91,6 +101,7 @@ export interface CharacterInfo {
   roleType: CharacterRole;
   backgroundColor: string;
   id: number;
+  habilities?: CharacterAbility[];
   description: string;
   images: {
     icon: CharacterImageType;
@@ -100,6 +111,7 @@ export interface CharacterInfo {
 
 export class Player {
   army: Character[];
+
   selectedCharacter: Character | null;
   constructor() {
     this.selectedCharacter = null;
@@ -108,7 +120,7 @@ export class Player {
   hasCharacter(id: number): boolean {
     return this.army.find((x) => x.id == id) != undefined;
   }
-  canSelectCharacter() {
+  canSelectMore() {
     return this.army.length < 5;
   }
 }

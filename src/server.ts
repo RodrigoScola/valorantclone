@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
-import { CharacterSelect, currentPlayer } from "../types";
-import { Characters, RoleHandler } from "./data";
+import { currentPlayer } from "../types";
+import { Characters, CharactersSelectList, RoleHandler } from "./data";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -13,32 +13,30 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+const characterSelectList = new CharactersSelectList(
+  Array.from(Characters.allCharacters.values())
+);
+
 // routers
 app.get("/", (req, res) => {
-  const characters: CharacterSelect[] = [];
-
-  Characters.allCharacters.forEach((char) =>
-    characters.push(
-      new CharacterSelect(char.info, currentPlayer.hasCharacter(char.info.id))
-    )
-  );
-
+  console.log(characterSelectList);
   res.render("index", {
-    characters: characters,
+    characters: characterSelectList.allCharacters,
     team: currentPlayer.army,
+    canSelectMore: currentPlayer.canSelectMore(),
   });
 });
 app.get("/add", (req, res) => {
   if (
-    currentPlayer.canSelectCharacter() &&
+    currentPlayer.canSelectMore() &&
     currentPlayer.selectedCharacter &&
     !currentPlayer.hasCharacter(currentPlayer.selectedCharacter.id)
   ) {
     currentPlayer.army.push(currentPlayer.selectedCharacter);
+    characterSelectList.setUnavailable(currentPlayer.selectedCharacter.id);
     currentPlayer.selectedCharacter = undefined;
   }
 
-  console.log(currentPlayer.army);
   res.render("partials/team", {
     team: currentPlayer.army,
   });
@@ -46,7 +44,8 @@ app.get("/add", (req, res) => {
 app.get("/reset", (req, res) => {
   currentPlayer.army = [];
   currentPlayer.selectedCharacter = undefined;
-  res.render("partials/team", {
+  characterSelectList.reset();
+  res.render("index", {
     team: currentPlayer.army,
   });
 });

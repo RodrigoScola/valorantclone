@@ -45,11 +45,32 @@ export class Character {
       roleType: this.roleType,
       id: this.id,
       description: this.description,
-      backgroundColor: "#a73c01",
+      backgroundColor: this.backgroundColor,
       images: {
         full: this.full,
         icon: this.icon,
       },
+    };
+  }
+}
+export class CharacterSelect extends Character {
+  isValid: boolean;
+  constructor(charInfo: CharacterInfo, isValid: boolean = false) {
+    super(
+      charInfo.name,
+      charInfo.roleType,
+      charInfo.id,
+      charInfo.description,
+      charInfo.images.icon,
+      charInfo.images.full,
+      charInfo.backgroundColor
+    );
+    this.isValid = isValid;
+  }
+  override get info() {
+    return {
+      ...super.info,
+      valid: this.isValid,
     };
   }
 }
@@ -68,7 +89,7 @@ type CharacterImageType = {
 export interface CharacterInfo {
   name: CharacterName;
   roleType: CharacterRole;
-  backgroundColor?: string;
+  backgroundColor: string;
   id: number;
   description: string;
   images: {
@@ -83,6 +104,12 @@ export class Player {
   constructor() {
     this.selectedCharacter = null;
     this.army = [];
+  }
+  hasCharacter(id: number): boolean {
+    return this.army.find((x) => x.id == id) != undefined;
+  }
+  canSelectCharacter() {
+    return this.army.length < 5;
   }
 }
 export const currentPlayer = new Player();

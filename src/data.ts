@@ -504,6 +504,26 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+  {
+    name: CharacterName.DEADLOCK,
+    roleType: CharacterRole.SENTINEL,
+    id: 21,
+    backgroundColor: "#958f90",
+    description:
+      "Norwegian operative Deadlock deploys an array of cutting-edge nanowire to secure the battlefield from even the most lethal assault. No one escapes her vigilant watch, nor survives her unyielding ferocity.",
+    images: {
+      icon: {
+        url: Characters.getImagePath(CharacterName.DEADLOCK, "icon"),
+      },
+      full: {
+        url: Characters.getImagePath(CharacterName.DEADLOCK, "full"),
+        rotation: 0,
+        scale: 1,
+        x: 0,
+        y: 0,
+      },
+    },
+  },
 ];
 charactersinfo.forEach((character) => {
   Characters.allCharacters.set(

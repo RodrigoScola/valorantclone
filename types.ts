@@ -26,6 +26,7 @@ export enum CharacterName {
   FADE = "fade",
   HARBOR = "harbor",
   GEKKO = "gekko",
+  DEADLOCK = "deadlock",
 }
 export enum CharacterRole {
   CONTROLLER = "CONTROLLER",

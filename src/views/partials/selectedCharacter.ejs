@@ -1,0 +1,27 @@
+<div class="flex justify-center">
+
+  <img src="<%= character.images.full.url %>" alt="" />
+
+  <div>
+
+    <div>
+      <h1 class="text-4xl"><%= role.name %></h1>
+      <p><%= role.description %></p>
+
+    </div>
+    <div>
+      <h1 class="text-2xl"> habilities </h1>
+      <% for (let i = 0; i < character.habilities.length; i++) { %>
+
+      <p>
+        <%= character.habilities[i].name %>
+      </p>
+      <p>
+        <%= character.habilities[i].description %>
+      </p>
+      <%= console.log(character.habilities[i].imagePath) %>
+      <img src="<%= character.habilities[i].imagePath %>" alt="" />
+      <% } %>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,11 @@
 import {
-  Character,
   CharacterInfo,
   CharacterName,
   CharacterRole,
-  CharacterSelect,
   RoleType,
 } from "../types";
-import { HabilityFactory } from "./views/Habilities";
+import { Character } from "./Character";
+import { HabilityFactory } from "./Habilities";
 
 export const classInfo: Record<CharacterRole, RoleType> = {
   DUELIST: {
@@ -43,7 +42,6 @@ export class Characters {
     return `images/${format}/${name}_${format}.${imagesavedFormat}`;
   }
   public static getCharacter(id: number): Character {
-    console.log(id);
     if (!Characters.allCharacters.has(id)) {
       throw Error("character dosnt exist");
     }
@@ -66,28 +64,37 @@ export class RoleHandler {
   }
 }
 export class CharactersSelectList {
-  availableCharacters: Map<number, CharacterSelect>;
+  // could change to base characters on data
+  availableCharacters: Map<number, Character>;
+  allCharactersMap: Map<number, Character>;
 
   constructor(characters: Character[]) {
     this.availableCharacters = new Map();
+    this.allCharactersMap = new Map();
     characters.forEach((character) => {
+      this.allCharactersMap.set(
+        character.info.id,
+        new Character(character.info)
+      );
       this.availableCharacters.set(
         character.info.id,
-        new CharacterSelect(character.info, true)
+        new Character(character.info)
       );
     });
   }
   get allCharacters() {
-    return Array.from(this.availableCharacters.values());
+    return Array.from(this.allCharactersMap.values());
   }
   reset() {
-    this.availableCharacters.forEach((ch: CharacterSelect) => {
-      ch.isValid = true;
+    this.allCharactersMap.forEach((ch: Character) => {
+      if (!this.availableCharacters.has(ch.id)) {
+        this.availableCharacters.set(ch.id, ch);
+      }
     });
   }
   setUnavailable(characterId: number) {
     if (this.availableCharacters.has(characterId)) {
-      this.availableCharacters.get(characterId)!.isValid = false;
+      this.availableCharacters.delete(characterId);
     }
   }
 }
@@ -120,6 +127,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.DUELIST,
     id: 1,
     backgroundColor: "#febe64",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.PHOENIX),
     description: `Hailing from the U.K., Phoenix's star power shines through in his fighting style, igniting the battlefield with flash and flare. Whether he's got backup or not, he'll rush into a fight on his own terms.`,
     images: {
       icon: {
@@ -526,16 +534,5 @@ export const charactersinfo: CharacterInfo[] = [
   },
 ];
 charactersinfo.forEach((character) => {
-  Characters.allCharacters.set(
-    character.id,
-    new Character(
-      character.name,
-      character.roleType,
-      character.id,
-      character.description,
-      character.images.icon,
-      character.images.full,
-      character.backgroundColor
-    )
-  );
+  Characters.allCharacters.set(character.id, new Character(character));
 });

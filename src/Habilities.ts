@@ -1,4 +1,4 @@
-import { CharacterName } from "../../types";
+import { CharacterName } from "../types";
 
 export type CharacterHabilityInfo = {
   name: string;
@@ -111,6 +111,35 @@ export class HabilityFactory {
           HabilityFactory.getHability(AbilitiesIds.NANOSWARM),
           HabilityFactory.getHability(AbilitiesIds.LOCKDOWN),
         ];
+      case CharacterName.BREACH:
+        return [
+          HabilityFactory.getHability(AbilitiesIds.FLASHPOINT),
+          HabilityFactory.getHability(AbilitiesIds.FAULT_LINE),
+          HabilityFactory.getHability(AbilitiesIds.AFTERSHOCK),
+          HabilityFactory.getHability(AbilitiesIds.ROLLING_THUNDER),
+        ];
+      case CharacterName.OMEN:
+        return [
+          HabilityFactory.getHability(AbilitiesIds.PARANOIA),
+          HabilityFactory.getHability(AbilitiesIds.DARK_COVER),
+          HabilityFactory.getHability(AbilitiesIds.SHROUDED_STEP),
+          HabilityFactory.getHability(AbilitiesIds.FROM_SHADOWS),
+        ];
+      case CharacterName.JETT:
+        return [
+          HabilityFactory.getHability(AbilitiesIds.UPDRAFT),
+          HabilityFactory.getHability(AbilitiesIds.TAILWIND),
+          HabilityFactory.getHability(AbilitiesIds.CLUOUDBURST),
+          HabilityFactory.getHability(AbilitiesIds.BLADE_STORM),
+        ];
+      case CharacterName.RAZE:
+        return [
+          HabilityFactory.getHability(AbilitiesIds.BLAST_PACK),
+          HabilityFactory.getHability(AbilitiesIds.PAINT_SHELLS),
+          HabilityFactory.getHability(AbilitiesIds.BOOM_BOT),
+          HabilityFactory.getHability(AbilitiesIds.SHOWSTOPPER),
+        ];
+
       default:
         return [
           HabilityFactory.getHability(AbilitiesIds.SLOW_ORB),
@@ -315,6 +344,123 @@ export class HabilityFactory {
           description:
             "EQUIP the Lockdown device. FIRE to deploy the device. After a long windup, the device Detains all enemies caught in the radius. The device can be destroyed by enemies.",
         });
+      case AbilitiesIds.FLASHPOINT:
+        return new BaseHability({
+          name: "Flashpoint",
+          description:
+            "EQUIP a blinding charge. FIRE the charge to set fast-acting burst through the wall. The charge detonates to blind all players looking at it.",
+        });
+      case AbilitiesIds.FAULT_LINE:
+        return new BaseHability({
+          name: "Fault Line",
+          description:
+            "EQUIP a seismic blast. HOLD FIRE to increase the distance. RELEASE to set off the quake, dazing all players in its zone and in a line up to the zone.",
+        });
+      case AbilitiesIds.AFTERSHOCK:
+        return new BaseHability({
+          name: "Aftershock",
+          description:
+            "EQUIP a fusion charge. FIRE the charge to set a slow-acting burst through the wall. The burst does heavy damage to anyone caught in its area.",
+        });
+      case AbilitiesIds.ROLLING_THUNDER:
+        return new CharacterUltimateAbility({
+          name: "Rolling Thunder",
+          description:
+            "EQUIP a seismic charge. FIRE to send a cascading quake through all terrain in a large cone. The quake dazes and knocks up anyone caught in it.",
+        });
+      case AbilitiesIds.PARANOIA:
+        return new BaseHability({
+          name: "Paranoia",
+          description:
+            "INSTANTLY fire a shadow projectile forward, briefly reducing the vision range of all players it touches. This projectile can pass straight through walls.",
+        });
+      case AbilitiesIds.DARK_COVER:
+        return new BaseHability({
+          name: "Dark Cover",
+          description:
+            "EQUIP a shadow orb and see its range indicator. Alternate Fire throws the shadow orb to the marked location, reducing the vision range of all players within the smoke.",
+        });
+      case AbilitiesIds.SHROUDED_STEP:
+        return new BaseHability({
+          name: "Shrouded Step",
+          description:
+            "EQUIP a shadow walk ability and see its range indicator. FIRE to begin a brief channel, then teleport to the marked location",
+        });
+      case AbilitiesIds.FROM_SHADOWS:
+        return new CharacterUltimateAbility({
+          name: "From Shadows",
+          description:
+            "EQUIP an ethereal, destructible decoy. FIRE to throw. ALT FIRE to detonate, placing all players in the nearby area into nearsight.",
+        });
+      case AbilitiesIds.UPDRAFT:
+        return new BaseHability({
+          name: "Updraft",
+          description: "INSTANTLY propel Jett high into the air.",
+        });
+      case AbilitiesIds.TAILWIND:
+        return new BaseHability({
+          name: "Tailwind",
+          description: "INSTANTLY propel Jett in the direction she is moving.",
+        });
+      case AbilitiesIds.CLUOUDBURST:
+        return new BaseHability({
+          name: "Cloudburst",
+          description:
+            "INSTANTLY Throw a projectile that expands into a brief vision-blocking cloud on impact with a surface. HOLD the ability key to curve the smoke in the direction of your crosshair",
+        });
+      case AbilitiesIds.BLADE_STORM:
+        return new CharacterUltimateAbility({
+          name: "Blade Storm",
+          description:
+            "EQUIP a set of highly accurate throwing knives that recharge on killing an opponent. FIRE to throw a single knife at your target. ALTERNATE FIRE to throw all remaining daggers at your target.",
+        });
+      case AbilitiesIds.PAINT_SHELLS:
+        return new BaseHability({
+          name: "Paint Shells",
+          description:
+            "EQUIP a cluster grenade. FIRE to throw the grenade, which does damage and creates sub-munitions, each doing damage to anyone in their range.",
+        });
+      case AbilitiesIds.BLAST_PACK:
+        return new BaseHability({
+          name: "Blast Pack",
+          description:
+            "INSTANTLY throw a Blast Pack that will stick to surfaces. RE-USE the ability after deployment to detonate, damaging and moving anything hit.",
+        });
+      case AbilitiesIds.BOOM_BOT:
+        return new BaseHability({
+          name: "Boom Bot",
+          description:
+            "EQUIP a Boombot. FIRE will deploy the bot, causing it to travel in a straight line on the ground, bouncing off walls. The Boombot will lock on to any enemies in its frontal cone and chase them, exploding for heavy damage if it reaches them.",
+        });
+      case AbilitiesIds.SHOWSTOPPER:
+        return new CharacterUltimateAbility({
+          name: "Showstopper",
+          description:
+            "EQUIP a rocket launcher. FIRE shoots a rocket that does massive area damage on contact with anything.",
+        });
+      case AbilitiesIds.TRAILBLAZER:
+        return new BaseHability({
+          name: "Trailblazer",
+          description:
+            "EQUIP a Tasmanian tiger trinket. FIRE to send out and take control of the predator. While in control, FIRE to leap forward, exploding in a concussive blast and damaging directly hit enemies.",
+        });
+      case AbilitiesIds.GUIDING_LIGHT:
+        return new BaseHability({
+          name: "Guiding Light",
+          description:
+            "EQUIP a hawk trinket. FIRE to send it forward. HOLD FIRE to guide the hawk in the direction of your crosshair. RE-USE while the hawk is in flight to transform it into a flash.",
+        });
+      case AbilitiesIds.REGROWTH:
+        return new BaseHability({
+          name: "Regrowth",
+          description: "INSTANTLY heal an ally.",
+        });
+      case AbilitiesIds.SEEKERS:
+        return new CharacterUltimateAbility({
+          name: "Seekers",
+          description:
+            "EQUIP a cluster of seekers. FIRE to deploy a swarm of nano drones that seek out enemies. If an enemy is hit by the swarm, they are marked.",
+        });
     }
   }
 }
@@ -362,4 +508,27 @@ export enum AbilitiesIds {
   LOCKDOWN = 31,
   // -------- Breach ------
   FLASHPOINT = 32,
+  FAULT_LINE = 33,
+  AFTERSHOCK = 34,
+  ROLLING_THUNDER = 35,
+  // -------- Omen ------
+  PARANOIA = 36,
+  DARK_COVER = 37,
+  SHROUDED_STEP = 38,
+  FROM_SHADOWS = 39,
+  // -------- Jett ------
+  UPDRAFT = 40,
+  TAILWIND = 41,
+  CLUOUDBURST = 42,
+  BLADE_STORM = 43,
+  // -------- Raze ------
+  PAINT_SHELLS = 44,
+  BOOM_BOT = 45,
+  BLAST_PACK = 46, // Not sure in this number
+  SHOWSTOPPER = 47, // Not sure in this number
+  // -------- Skye ------
+  TRAILBLAZER = 48,
+  GUIDING_LIGHT = 49,
+  REGROWTH = 50,
+  SEEKERS = 51,
 }

@@ -1,0 +1,42 @@
+<%-include("./partials/header")-%>
+
+<body id='body' class="flex ">
+
+  <div class="absolute bottom-0 flex justify-center" id="habilities">
+    habilities
+  </div>
+
+  <% for (let i = 0; i < tiles.length; i++) { %>
+  <ul>
+
+    <% for (let j = 0; j < tiles[i].length; j++) { %>
+    <% const tile = tiles[i][j] %>
+
+    <% if (tile.contents.length > 0) { %>
+
+    <% if (tile.contents.some(x => x.type === 'character')) { %>
+
+    <% const character = tile.contents.find(x => x.type === 'character') %>
+    <% console.log(character) %>
+
+    <li hx-target="#habilities" hx-get="/select-character/<%=character.id %>" class="border bg-<%= character.name %>  w-5 h-5">
+      a
+    </li>
+    <% }  %>
+
+    <% } else { %>
+
+    <li hx-target="body" hx-get="move/<%=i%>/<%=j %>" class="border w-5 h-5">
+
+    </li>
+    <%    } %>
+    <%    } %>
+  </ul>
+  <%    } %>
+
+
+  </main>
+
+</body>
+
+</html>

@@ -1,8 +1,5 @@
-import {
-  BaseHability,
-  CharacterAbility,
-  HabilityFactory,
-} from "./src/views/Habilities";
+import { Character, PlayableCharacter } from "./src/Character";
+import { CharacterAbility } from "./src/Habilities";
 
 export enum CharacterName {
   BRIMSTONE = "brimstone",
@@ -35,62 +32,12 @@ export enum CharacterRole {
   SENTINEL = "SENTINEL",
 }
 
-export class Character {
-  habilities: BaseHability[];
-  constructor(
-    public name: CharacterName,
-    public roleType: CharacterRole,
-    public id: number,
-    public description: string,
-    public icon: CharacterImageType,
-    public full: CharacterImageType,
-    public backgroundColor: string
-  ) {
-    this.habilities = [];
-  }
-
-  public get info(): CharacterInfo {
-    return {
-      name: this.name,
-      roleType: this.roleType,
-      id: this.id,
-      habilities: HabilityFactory.getHabilitiesByCharacter(this.name),
-      description: this.description,
-      backgroundColor: this.backgroundColor,
-      images: {
-        full: this.full,
-        icon: this.icon,
-      },
-    };
-  }
-}
-export class CharacterSelect extends Character {
-  isValid: boolean;
-  constructor(charInfo: CharacterInfo, isValid: boolean = false) {
-    super(
-      charInfo.name,
-      charInfo.roleType,
-      charInfo.id,
-      charInfo.description,
-      charInfo.images.icon,
-      charInfo.images.full,
-      charInfo.backgroundColor
-    );
-    this.isValid = isValid;
-  }
-  override get info() {
-    return {
-      ...super.info,
-      valid: this.isValid,
-    };
-  }
-}
 export type RoleType = {
   id: number;
   name: CharacterRole;
   description: string;
 };
-type CharacterImageType = {
+export type CharacterImageType = {
   url: string;
   rotation?: number;
   scale?: number;
@@ -110,6 +57,11 @@ export interface CharacterInfo {
   };
 }
 
+export type Vector2 = {
+  x: number;
+  y: number;
+};
+
 export class Player {
   army: Character[];
 
@@ -125,4 +77,22 @@ export class Player {
     return this.army.length < 5;
   }
 }
+
+export class InGamePlayer {
+  army: PlayableCharacter[];
+  private selectedCharacterId: number;
+
+  set selectedCharacter(char: Character) {
+    this.selectedCharacterId = char.id;
+  }
+
+  get selectedCharacter(): PlayableCharacter {
+    return this.army.find((x) => x.id == this.selectedCharacterId)!;
+  }
+  constructor(army: PlayableCharacter[], selectedCharacterId: number) {
+    this.army = army;
+    this.selectedCharacterId = selectedCharacterId;
+  }
+}
+
 export const currentPlayer = new Player();

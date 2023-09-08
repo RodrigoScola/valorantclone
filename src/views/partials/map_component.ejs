@@ -1,0 +1,25 @@
+   <% for (let i = 0; i < tiles.length; i++) { %>
+   <ul class="" id="row-<%= i %>">
+     <% for (let j = 0; j < tiles[i].length; j++) { %>
+     <% const tile = tiles[i][j] %>
+
+
+     <% if (tile.contents.length > 0) { %>
+
+     <% if (tile.contents.some(x => x.type === 'character')) { %>
+
+     <% const character = tile.contents.find(x => x.type === 'character') %>
+
+     <li hx-target="#habilities" hx-get="/select-character/<%=character.info.id %>" class="border bg-<%= tile.color %>  w-5 h-5">
+
+     </li>
+     <% }  %>
+
+     <% } else { %>
+
+     <li hx-get="/move/<%=i%>/<%=j %>" hx-target="#map" class="border bg-<%= tile.color %> w-5 h-5">
+     </li>
+     <%    } %>
+     <%    } %>
+   </ul>
+   <%    } %>

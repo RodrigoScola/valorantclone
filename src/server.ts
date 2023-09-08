@@ -2,8 +2,9 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import { InGamePlayer, currentPlayer } from "../types";
-import { PlayableCharacter } from "./Character";
-import { currentMap } from "./Map";
+import { Character, PlayableCharacter } from "./Character";
+import { gameState } from "./GameState";
+import { HabilityFactory } from "./Habilities";
 import {
   Characters,
   CharactersSelectList,
@@ -27,11 +28,10 @@ const characterSelectList = new CharactersSelectList(
 
 currentPlayer.army = [];
 
-const currentPlayingPlayer = new InGamePlayer([], -1);
+export const currentPlayingPlayer = new InGamePlayer([], -1);
 
 // routers
 app.get("/", (_, res) => {
-  console.log(currentPlayer.army);
   res.render("index", {
     characters: characterSelectList.allCharacters,
     team: currentPlayer.army,
@@ -57,7 +57,6 @@ app.get("/reset", (_, res) => {
   currentPlayer.army = [];
   currentPlayer.selectedCharacter = null;
   characterSelectList.reset();
-  console.log(characterSelectList.allCharacters);
   res.render("index", {
     team: currentPlayer.army,
     characters: characterSelectList.allCharacters,
@@ -65,7 +64,9 @@ app.get("/reset", (_, res) => {
 });
 app.get("/select/:characterId", (req, res) => {
   console.log(req.params);
-  const character = Characters.getCharacter(parseInt(req.params.characterId));
+  const character: Character = Characters.getCharacter(
+    parseInt(req.params.characterId)
+  );
 
   currentPlayer.selectedCharacter = character;
   res.render("partials/selectedCharacter", {
@@ -73,51 +74,55 @@ app.get("/select/:characterId", (req, res) => {
     role: RoleHandler.getRole(character.info.roleType),
   });
 });
-app.get("/select-character/:characterId", (req, res) => {
-  console.log(req.params);
-  const character = currentPlayingPlayer.army.find(
-    (x) => x.id == parseInt(req.params.characterId)
-  );
-
-  currentPlayingPlayer.selectedCharacter = character;
-
-  console.log(character?.info.habilities);
-
-  res.render("partials/habilities_tab", {
-    habilities: character?.info.habilities,
-  });
-});
 
 app.get("/map", (_, res) => {
-  currentPlayingPlayer.army = [];
-  currentPlayer.army.forEach((char, i) => {
-    currentPlayingPlayer.army.push(
-      new PlayableCharacter(char.info, {
-        x: i,
-        y: 0,
-      })
-    );
-  });
-
-  currentPlayingPlayer.army.forEach((x) => {
-    currentMap.tiles[x.position.x][x.position.y].contents.push(x);
-  });
+  gameState.reset();
   res.render("map", {
-    tiles: currentMap.tiles,
+    tiles: gameState.map.tiles,
   });
 });
 
 app.get("/move/:x/:y", (req, res) => {
-  currentPlayingPlayer.selectedCharacter.move(
-    {
-      x: parseInt(req.params.x),
-      y: parseInt(req.params.y),
-    },
-    currentMap.tiles
+  console.log("ARMY:\n\n");
+  if (currentPlayingPlayer.selectedCharacter) {
+    currentPlayingPlayer.selectedCharacter.move(
+      {
+        x: parseInt(req.params.x),
+        y: parseInt(req.params.y),
+      },
+      gameState.map.tiles
+    );
+  }
+
+  console.log(
+    gameState.map.tiles[parseInt(req.params.y)][parseInt(req.params.x)]
   );
 
+  res.render("partials/map_component", {
+    tiles: gameState.map.tiles,
+  });
+});
+app.get("/select-character/:characterId", (req, res) => {
+  console.log("HH");
+  const character = currentPlayingPlayer.army.find(
+    (x) => x.info.id == parseInt(req.params.characterId)
+  ) as PlayableCharacter;
+
+  currentPlayingPlayer.selectedCharacter = character;
+
+  res.render("partials/habilities_tab", {
+    habilities: character.info.habilities,
+  });
+});
+app.get("/select-ability/:abilityId", (req, res) => {
+  console.log("HHaAAAA");
+  const ability = HabilityFactory.getHability(parseInt(req.params.abilityId));
+  if (currentPlayingPlayer) {
+    currentPlayingPlayer.selectedCharacter?.selectAbility(ability);
+  }
+  console.log("select");
   res.render("map", {
-    tiles: currentMap.tiles,
+    tiles: gameState.map.tiles,
   });
 });
 

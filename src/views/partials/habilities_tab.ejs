@@ -1,4 +1,10 @@
 <% for(let i = 0; i < habilities.length; i++)  { %>
-<img class="filter grayscale bg-" src="<%= habilities[i].imagePath%>" />
-<p><%= habilities[i].name %></p>
+
+
+
+<%  console.log(habilities[i].id) %>
+<div hx-target="#map" hx-swap="innerHTML" hx-get="/select-ability/<%= habilities[i].id %>">
+  <img class="filter grayscale max-w-md bg-red-300" src="<%= habilities[i].imagePath %>" />
+  <p><%= habilities[i].name %></p>
+</div>
 <% } %>

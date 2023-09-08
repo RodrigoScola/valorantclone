@@ -1,43 +1,37 @@
 import { CharacterInfo, Vector2 } from "../types";
+import { gameState } from "./GameState";
 import { CharacterAbility } from "./Habilities";
 import { GameObject, Tile } from "./Map";
 
-class CharacterHabilities {
-  abilities: CharacterAbility[];
-  selectedAbility: CharacterAbility | null = null;
-  constructor(abilities: CharacterAbility[]) {
-    this.abilities = abilities;
-  }
-}
-
 export class Character {
-  private _info: CharacterInfo;
-  private habilites: CharacterHabilities;
+  info: CharacterInfo;
   constructor(info: CharacterInfo) {
-    this._info = info;
-
-    this.habilites = new CharacterHabilities(info.habilities);
-  }
-
-  get info(): CharacterInfo {
-    return {
-      ...this._info,
-    };
+    this.info = info;
   }
 }
 
-export class PlayableCharacter implements GameObject {
-  position: Vector2;
-  type: string = "character";
+export class PlayableCharacter extends GameObject {
   info: CharacterInfo;
+
+  selectedAbility: CharacterAbility | null = null;
+  selectAbility(ability: CharacterAbility) {
+    this.selectedAbility = ability;
+    ability.select(this);
+  }
   constructor(charInfo: CharacterInfo, position: Vector2) {
+    super(position, "character");
     this.info = charInfo;
     this.position = position;
+    this.move(this.position, gameState.map.tiles);
   }
 
   move(position: Vector2, tiles: Tile[][]) {
     tiles[this.position.x][this.position.y].remove(this);
     tiles[position.x][position.y].add(this);
+
+    // for tailwind you need to put the name of the character
+    tiles[position.x][position.y].color = this.info.name;
+
     this.position = position;
   }
 }

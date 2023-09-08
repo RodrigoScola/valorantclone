@@ -6,34 +6,11 @@
     habilities
   </div>
 
-  <% for (let i = 0; i < tiles.length; i++) { %>
-  <ul>
+  <div id="map" class=" flex">
 
-    <% for (let j = 0; j < tiles[i].length; j++) { %>
-    <% const tile = tiles[i][j] %>
+    <%-include("./partials/map_component")-%>
 
-    <% if (tile.contents.length > 0) { %>
-
-    <% if (tile.contents.some(x => x.type === 'character')) { %>
-
-    <% const character = tile.contents.find(x => x.type === 'character') %>
-    <% console.log(character) %>
-
-    <li hx-target="#habilities" hx-get="/select-character/<%=character.id %>" class="border bg-<%= character.name %>  w-5 h-5">
-
-    </li>
-    <% }  %>
-
-    <% } else { %>
-
-    <li hx-target="body" hx-get="move/<%=i%>/<%=j %>" class="border w-5 h-5">
-
-    </li>
-    <%    } %>
-    <%    } %>
-  </ul>
-  <%    } %>
-
+  </div>
 
   </main>
 

@@ -83,11 +83,11 @@ export class InGamePlayer {
   private selectedCharacterId: number;
 
   set selectedCharacter(char: Character) {
-    this.selectedCharacterId = char.id;
+    this.selectedCharacterId = char.info.id;
   }
 
   get selectedCharacter(): PlayableCharacter {
-    return this.army.find((x) => x.id == this.selectedCharacterId)!;
+    return this.army.find((x) => x.info.id == this.selectedCharacterId)!;
   }
   constructor(army: PlayableCharacter[], selectedCharacterId: number) {
     this.army = army;

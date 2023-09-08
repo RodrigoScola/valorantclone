@@ -10,7 +10,7 @@
 
      <% const character = tile.contents.find(x => x.type === 'character') %>
 
-     <li hx-target="#habilities" hx-get="/select-character/<%=character.info.id %>" class="border bg-<%= tile.color %>  w-5 h-5">
+     <li hx-target="#habilities" hx-get="/select-character/<%=character.info.id %>" class="border bg-<%= character.info.name %>  w-5 h-5">
 
      </li>
      <% }  %>

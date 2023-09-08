@@ -83,19 +83,23 @@ app.get("/map", (_, res) => {
 });
 
 app.get("/move/:x/:y", (req, res) => {
-  console.log("ARMY:\n\n");
-  if (currentPlayingPlayer.selectedCharacter) {
-    currentPlayingPlayer.selectedCharacter.move(
-      {
-        x: parseInt(req.params.x),
-        y: parseInt(req.params.y),
-      },
-      gameState.map.tiles
-    );
+  const character = currentPlayingPlayer.selectedCharacter;
+
+  if (!character) {
+    return res.render("partials/map_component", {
+      tiles: gameState.map.tiles,
+    });
   }
 
-  console.log(
-    gameState.map.tiles[parseInt(req.params.y)][parseInt(req.params.x)]
+  if (character.isExecutingAbility) {
+    character.selectedAbility?.cleanSelect(character);
+  }
+  character.move(
+    {
+      x: parseInt(req.params.x),
+      y: parseInt(req.params.y),
+    },
+    gameState.map.tiles
   );
 
   res.render("partials/map_component", {
@@ -115,7 +119,6 @@ app.get("/select-character/:characterId", (req, res) => {
   });
 });
 app.get("/select-ability/:abilityId", (req, res) => {
-  console.log("HHaAAAA");
   const ability = HabilityFactory.getHability(parseInt(req.params.abilityId));
   if (currentPlayingPlayer) {
     currentPlayingPlayer.selectedCharacter?.selectAbility(ability);

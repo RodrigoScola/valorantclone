@@ -1,6 +1,6 @@
-import { CharacterName } from "../types";
+import { CharacterName, Vector2 } from "../types";
 import { gameState } from "./GameState";
-import { GameObject } from "./Map";
+import { GameObject, Tile } from "./Map";
 import { Component } from "./component";
 
 export type CharacterHabilityInfo = {
@@ -13,35 +13,67 @@ type CharacterAbilitiesTypes = {
   onSelectComponents: Component;
 };
 
+export type AffectedTile = {
+  position: Vector2;
+  previousState: Tile;
+};
 export class Highlighter extends Component {
-  area: number;
+  area: Vector2;
+  offset: Vector2;
   hihglightColor: string;
-  constructor(area: number, highlightColor: string) {
+  affectedTiles: AffectedTile[] = [];
+  constructor(
+    area: Vector2,
+    highlightColor: string,
+    offset: Vector2 = {
+      x: 0,
+      y: 0,
+    }
+  ) {
     super();
+    this.offset = offset;
     this.area = area;
     this.hihglightColor = highlightColor;
   }
+
   override execute(GameObject: GameObject) {
-    for (
-      let i = GameObject.position.x - this.area;
-      i <= GameObject.position.x + this.area;
-      i++
-    ) {
-      for (
-        let j = GameObject.position.y - this.area;
-        j <= GameObject.position.y + this.area;
-        j++
-      ) {
+    this.highlightArea(
+      {
+        x: GameObject.position.x - this.area.x + this.offset.x,
+        y: GameObject.position.y - this.area.y - this.offset.y,
+      },
+      {
+        x: GameObject.position.x + this.area.x + this.offset.x,
+        y: GameObject.position.y + this.area.y - this.offset.y,
+      },
+      this.hihglightColor
+    );
+  }
+
+  private highlightArea(startPos: Vector2, endPos: Vector2, color: string) {
+    for (let i = startPos.x; i <= endPos.x; i++) {
+      for (let j = startPos.y; j <= endPos.y; j++) {
         const tile = gameState.map.getTileByPosition(i, j);
-        if (
-          tile.position.x == GameObject.position.x &&
-          tile.position.y == GameObject.position.y
-        ) {
-          continue;
-        }
-        tile.color = "yellow-200";
+        if (!tile) continue;
+
+        this.affectedTiles.push({
+          position: tile.position,
+          previousState: Object.assign({}, tile),
+        });
+        tile.color = color;
       }
     }
+  }
+  override cleanup(GameObject: GameObject): void {
+    this.affectedTiles.forEach((tile) => {
+      const currentTile = gameState.map.getTileByPosition(
+        tile.position.x,
+        tile.position.y
+      );
+      console.log(currentTile.color);
+      currentTile.color = tile.previousState.color;
+      console.log(currentTile.color);
+    });
   }
 }
 
@@ -54,6 +86,8 @@ export interface CharacterAbility {
   addToExecute(component: Component): void;
   select(GameObject: GameObject): void;
   execute(GameObject: GameObject): void;
+  cleanSelect(GameObject: GameObject): void;
+  get isExecuting(): boolean;
 }
 
 export class BaseHability implements CharacterAbility {
@@ -84,11 +118,18 @@ export class BaseHability implements CharacterAbility {
   addToSelect(component: Component): void {
     this.selectComponent.addComponent(component);
   }
+  get isExecuting(): boolean {
+    return this.useComponents.active;
+  }
   addToExecute(component: Component): void {
     this.useComponents.addComponent(component);
   }
   select(GameObject: GameObject): void {
     this.selectComponent.execute(GameObject);
+  }
+  cleanSelect(GameObject: GameObject) {
+    console.log("a");
+    this.selectComponent.cleanup(GameObject);
   }
   static getImagePath(imageName: string): string {
     const imagename = imageName.toLocaleLowerCase().replace(" ", "_");
@@ -102,20 +143,31 @@ export class CharacterUltimateAbility implements CharacterAbility {
 
   imagePath: string;
   private selectComponent: Component;
+  id: AbilitiesIds;
+
   private useComponents: Component;
-  constructor(props: CharacterHabilityInfo) {
+  constructor(
+    props: CharacterHabilityInfo,
+    components: CharacterAbilitiesTypes = {
+      onExecuteComponents: new Component(),
+      onSelectComponents: new Component(),
+    }
+  ) {
+    this.id = props.id;
     this.name = props.name;
     this.description = props.description;
     this.imagePath = CharacterUltimateAbility.getImagePath(this.name);
-    this.selectComponent = new Component();
-    this.useComponents = new Component();
+    this.selectComponent = components.onSelectComponents;
+    this.useComponents = components.onExecuteComponents;
   }
-  id: AbilitiesIds;
   execute(): void {
     throw new Error("Method not implemented.");
   }
   addToSelect(component: Component): void {
     this.selectComponent.addComponent(component);
+  }
+  get isExecuting(): boolean {
+    return this.useComponents.active;
   }
   addToExecute(component: Component): void {
     this.useComponents.addComponent(component);
@@ -125,6 +177,9 @@ export class CharacterUltimateAbility implements CharacterAbility {
   }
   useAbility(GameObject: GameObject): void {
     this.useComponents.execute(GameObject);
+  }
+  cleanSelect(GameObject: GameObject): void {
+    this.selectComponent.cleanup(GameObject);
   }
 
   static getImagePath(name: string): string {
@@ -242,12 +297,20 @@ export class HabilityFactory {
             "EQUIP a resurrection ability. FIRE with your crosshairs placed over a dead ally to begin resurrecting them. After a brief channel, the ally will be brought back to life with full health.",
         });
       case AbilitiesIds.BARRIER_ORB:
-        return new BaseHability({
-          name: "Barrier Orb",
-          id: id,
-          description:
-            "EQUIP a barrier orb. FIRE places a solid wall. ALT FIRE rotates the targeter.",
-        });
+        return new BaseHability(
+          {
+            name: "Barrier Orb",
+            id: id,
+            description:
+              "EQUIP a barrier orb. FIRE places a solid wall. ALT FIRE rotates the targeter.",
+          },
+          {
+            onSelectComponents: new Component().addComponent(
+              new Highlighter({ x: 4, y: 0 }, "pink-200", { x: 0, y: 3 })
+            ),
+            onExecuteComponents: new Component(),
+          }
+        );
       case AbilitiesIds.HEALING_ORB:
         return new BaseHability({
           name: "HEALING ORB",
@@ -476,7 +539,17 @@ export class HabilityFactory {
           },
           {
             onSelectComponents: new Component().addComponent(
-              new Highlighter(2, "green")
+              new Highlighter(
+                {
+                  x: 2,
+                  y: 3,
+                },
+                "green-200",
+                {
+                  x: 0,
+                  y: 3,
+                }
+              )
             ),
             onExecuteComponents: new Component(),
           }
@@ -489,12 +562,30 @@ export class HabilityFactory {
             "EQUIP a fusion charge. FIRE the charge to set a slow-acting burst through the wall. The burst does heavy damage to anyone caught in its area.",
         });
       case AbilitiesIds.ROLLING_THUNDER:
-        return new CharacterUltimateAbility({
-          id: id,
-          name: "Rolling Thunder",
-          description:
-            "EQUIP a seismic charge. FIRE to send a cascading quake through all terrain in a large cone. The quake dazes and knocks up anyone caught in it.",
-        });
+        return new CharacterUltimateAbility(
+          {
+            id: id,
+            name: "Rolling Thunder",
+            description:
+              "EQUIP a seismic charge. FIRE to send a cascading quake through all terrain in a large cone. The quake dazes and knocks up anyone caught in it.",
+          },
+          {
+            onSelectComponents: new Component().addComponent(
+              new Highlighter(
+                {
+                  x: 3,
+                  y: 7,
+                },
+                "orange-200",
+                {
+                  x: 0,
+                  y: 7,
+                }
+              )
+            ),
+            onExecuteComponents: new Component(),
+          }
+        );
       case AbilitiesIds.PARANOIA:
         return new BaseHability({
           id: id,
@@ -507,7 +598,7 @@ export class HabilityFactory {
           id: id,
           name: "Dark Cover",
           description:
-            "EQUIP a shadow orb and see its range indicator. Alternate Fire throws the shadow orb to the marked location, reducing the vision range of all players within the smoke.",
+            "EQUIP a shadow orb and see its range indicator. FIRE to throw the shadow orb to the marked location, creating a long-lasting shadow sphere that blocks vision. HOLD ALTERNATE FIRE while targeting to move the marker further away. HOLD the ability key with targeting to move the market closer. Use RELOAD to cancel the targeting.",
         });
       case AbilitiesIds.SHROUDED_STEP:
         return new BaseHability({

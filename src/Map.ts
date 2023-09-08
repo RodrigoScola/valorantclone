@@ -13,6 +13,8 @@ export class Tile {
   position: Vector2;
   contents: GameObject[];
   color: string;
+  walkable: boolean = true;
+  isWall = false;
   constructor(position: Vector2, contents: GameObject[] = []) {
     this.position = position;
     this.color = "white";
@@ -31,7 +33,15 @@ export class Tile {
 export class ValorantMap {
   tiles: Tile[][];
 
-  getTileByPosition(x: number, y: number) {
+  getTileByPosition(x: number, y: number): Tile | null {
+    if (
+      x < 0 ||
+      x > this.tiles.length ||
+      y < 0 ||
+      y > this.tiles[this.tiles.length - 1].length
+    ) {
+      return null;
+    }
     return this.tiles[x][y];
   }
   constructor(tiles: Tile[][]) {

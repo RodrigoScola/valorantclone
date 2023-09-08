@@ -15,8 +15,17 @@ export class PlayableCharacter extends GameObject {
 
   selectedAbility: CharacterAbility | null = null;
   selectAbility(ability: CharacterAbility) {
+    if (this.selectedAbility !== null) {
+      this.selectedAbility.cleanSelect(this);
+    }
+
     this.selectedAbility = ability;
+    console.log(this.selectedAbility);
     ability.select(this);
+  }
+
+  get isExecutingAbility() {
+    return this.selectedAbility?.isExecuting;
   }
   constructor(charInfo: CharacterInfo, position: Vector2) {
     super(position, "character");

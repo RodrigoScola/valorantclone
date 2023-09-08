@@ -9,6 +9,10 @@ export interface CharacterAbility {
   description: string;
   imagePath: string;
 
+  prepare(): void;
+  use(): void;
+  addToPrepare(component): void;
+  addToUse(): void;
   getImagePath(): string;
 }
 
@@ -21,6 +25,18 @@ export class BaseHability implements CharacterAbility {
     this.name = props.name;
     this.description = props.description;
     this.imagePath = BaseHability.getImagePath(this.name);
+  }
+  addToPrepare(component: any): void {
+    throw new Error("Method not implemented.");
+  }
+  addToUse(): void {
+    throw new Error("Method not implemented.");
+  }
+  prepare(): void {
+    throw new Error("Method not implemented.");
+  }
+  use(): void {
+    throw new Error("Method not implemented.");
   }
   getImagePath(): string {
     throw new Error("Method not implemented.");
@@ -40,6 +56,18 @@ export class CharacterUltimateAbility implements CharacterAbility {
     this.name = props.name;
     this.description = props.description;
     this.imagePath = CharacterUltimateAbility.getImagePath(this.name);
+  }
+  addToPrepare(component: any): void {
+    throw new Error("Method not implemented.");
+  }
+  addToUse(): void {
+    throw new Error("Method not implemented.");
+  }
+  prepare(): void {
+    throw new Error("Method not implemented.");
+  }
+  use(): void {
+    throw new Error("Method not implemented.");
   }
   getImagePath(): string {
     throw new Error("Method not implemented.");

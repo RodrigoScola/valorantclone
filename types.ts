@@ -49,7 +49,7 @@ export interface CharacterInfo {
   roleType: CharacterRole;
   backgroundColor: string;
   id: number;
-  habilities?: CharacterAbility[];
+  habilities: CharacterAbility[];
   description: string;
   images: {
     icon: CharacterImageType;

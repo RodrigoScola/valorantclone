@@ -87,8 +87,8 @@ export class CharactersSelectList {
   }
   reset() {
     this.allCharactersMap.forEach((ch: Character) => {
-      if (!this.availableCharacters.has(ch.id)) {
-        this.availableCharacters.set(ch.id, ch);
+      if (!this.availableCharacters.has(ch.info.id)) {
+        this.availableCharacters.set(ch.info.id, ch);
       }
     });
   }
@@ -98,72 +98,93 @@ export class CharactersSelectList {
     }
   }
 }
+export const ASTRA = new Character({
+  name: CharacterName.ASTRA,
+  roleType: CharacterRole.CONTROLLER,
+  backgroundColor: "#9844c2",
+  id: 14,
+  habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.ASTRA),
+  description:
+    "Ghanaian Agent Astra harnesses the energies of the cosmos to reshape battlefields to her whim. With full command of her astral form and a talent for deep strategic foresight, she's always eons ahead of her enemy's next move.",
+  images: {
+    icon: {
+      url: Characters.getImagePath(CharacterName.ASTRA, "icon"),
+    },
+    full: {
+      url: Characters.getImagePath(CharacterName.ASTRA, "full"),
+      rotation: 0,
+      scale: 1,
+      x: 0,
+      y: 25,
+    },
+  },
+});
+export const BRIMSTONE = new Character({
+  name: CharacterName.BRIMSTONE,
+  roleType: CharacterRole.CONTROLLER,
+  id: 0,
+  backgroundColor: "#f39353",
+  description: `Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and from a distance makes him an unmatched boots-on-the-ground commander.`,
+  habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.BRIMSTONE),
+  images: {
+    icon: {
+      url: Characters.getImagePath(CharacterName.BRIMSTONE, "icon"),
+    },
+    full: {
+      url: Characters.getImagePath(CharacterName.BRIMSTONE, "full"),
+      rotation: 0,
+      scale: 1,
+      x: 0,
+      y: 0,
+    },
+  },
+});
+export const PHOENIX = new Character({
+  name: CharacterName.PHOENIX,
+  roleType: CharacterRole.DUELIST,
+  id: 1,
+  backgroundColor: "#febe64",
+  habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.PHOENIX),
+  description: `Hailing from the U.K., Phoenix's star power shines through in his fighting style, igniting the battlefield with flash and flare. Whether he's got backup or not, he'll rush into a fight on his own terms.`,
+  images: {
+    icon: {
+      url: Characters.getImagePath(CharacterName.PHOENIX, "icon"),
+    },
+    full: {
+      url: Characters.getImagePath(CharacterName.PHOENIX, "full"),
+      rotation: 0,
+      scale: 1,
+      x: 0,
+      y: 0,
+    },
+  },
+});
+export const SAGE = new Character({
+  id: 2,
+  name: CharacterName.SAGE,
+  roleType: CharacterRole.SENTINEL,
+  habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.SAGE),
+  backgroundColor: "#75cdf0",
+  description: `The stronghold of China, Sage creates safety for herself and her team wherever she goes. Able to revive fallen friends and stave off aggressive pushes, she provides a calm center to a hellish fight.`,
+  images: {
+    icon: {
+      url: Characters.getImagePath(CharacterName.SAGE, "icon"),
+    },
+    full: {
+      url: Characters.getImagePath(CharacterName.SAGE, "full"),
+      rotation: 0,
+      scale: 1,
+      x: 0,
+      y: 0,
+    },
+  },
 
-export const charactersinfo: CharacterInfo[] = [
-  {
-    name: CharacterName.BRIMSTONE,
-    roleType: CharacterRole.CONTROLLER,
-    id: 0,
-    backgroundColor: "#f39353",
-    description: `Joining from the USA, Brimstone's orbital arsenal ensures his squad always has the advantage. His ability to deliver utility precisely and from a distance makes him an unmatched boots-on-the-ground commander.`,
-    habilities: HabilityFactory.getHabilitiesByCharacter(
-      CharacterName.BRIMSTONE
-    ),
-    images: {
-      icon: {
-        url: Characters.getImagePath(CharacterName.BRIMSTONE, "icon"),
-      },
-      full: {
-        url: Characters.getImagePath(CharacterName.BRIMSTONE, "full"),
-        rotation: 0,
-        scale: 1,
-        x: 0,
-        y: 0,
-      },
-    },
-  },
-  {
-    name: CharacterName.PHOENIX,
-    roleType: CharacterRole.DUELIST,
-    id: 1,
-    backgroundColor: "#febe64",
-    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.PHOENIX),
-    description: `Hailing from the U.K., Phoenix's star power shines through in his fighting style, igniting the battlefield with flash and flare. Whether he's got backup or not, he'll rush into a fight on his own terms.`,
-    images: {
-      icon: {
-        url: Characters.getImagePath(CharacterName.PHOENIX, "icon"),
-      },
-      full: {
-        url: Characters.getImagePath(CharacterName.PHOENIX, "full"),
-        rotation: 0,
-        scale: 1,
-        x: 0,
-        y: 0,
-      },
-    },
-  },
-  {
-    id: 2,
-    name: CharacterName.SAGE,
-    roleType: CharacterRole.SENTINEL,
-    backgroundColor: "#75cdf0",
-    description: `The stronghold of China, Sage creates safety for herself and her team wherever she goes. Able to revive fallen friends and stave off aggressive pushes, she provides a calm center to a hellish fight.`,
-    images: {
-      icon: {
-        url: Characters.getImagePath(CharacterName.SAGE, "icon"),
-      },
-      full: {
-        url: Characters.getImagePath(CharacterName.SAGE, "full"),
-        rotation: 0,
-        scale: 1,
-        x: 0,
-        y: 0,
-      },
-    },
-  },
+});
+export const SOVA = new Character(
   {
     name: CharacterName.SOVA,
     roleType: CharacterRole.INITIATOR,
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.SOVA),
     id: 3,
     backgroundColor: "#4c80ba",
     description: `Born from the eternal winter of Russia's tundra, Sova tracks, finds, and eliminates enemies with ruthless efficiency and precision. His custom bow and incredible scouting abilities ensure that even if you run, you cannot hide.`,
@@ -180,11 +201,14 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+)
+export const VIPER = new Character(
   {
     name: CharacterName.VIPER,
     roleType: CharacterRole.CONTROLLER,
     id: 4,
     backgroundColor: "#19c55d",
+    habilities:  HabilityFactory.getHabilitiesByCharacter(CharacterName.VIPER),
     description: `The American chemist, Viper deploys an array of poisonous chemical devices to control the battlefield and cripple the enemy's vision. If the toxins don't kill her prey, her mind games surely will.`,
     images: {
       icon: {
@@ -199,11 +223,14 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+)
+export const CYPER = new Character(
   {
     name: CharacterName.CYPHER,
     roleType: CharacterRole.SENTINEL,
     id: 5,
     backgroundColor: "#919298",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.CYPHER),
     description: `The Moroccan information broker, Cypher is a one-man surveillance network who keeps tabs on the enemy's every move. No secret is safe. No maneuver goes unseen. Cypher is always watching.`,
     images: {
       icon: {
@@ -218,9 +245,12 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+)
+export const REYNA = new Character(
   {
     name: CharacterName.REYNA,
     roleType: CharacterRole.DUELIST,
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.REYNA),
     id: 6,
     backgroundColor: "#b35dfa",
     description: `Forged in the heart of Mexico, Reyna dominates single combat, popping off with each kill she scores. Her capability is only limited by her raw skill, making her highly dependent on performance.`,
@@ -237,11 +267,14 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+)
+export const KILLJOY = new Character(
   {
     name: CharacterName.KILLJOY,
     roleType: CharacterRole.SENTINEL,
     id: 7,
     backgroundColor: "#ffee32",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.KILLJOY),
     description: `The genius of Germany. Killjoy secures the battlefield with ease using her arsenal of inventions. If the damage from her gear doesn't stop her enemies, her robots' debuff will help make short work of them.`,
     images: {
       icon: {
@@ -256,10 +289,14 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+)
+
+export const BREACH = new Character(
   {
     name: CharacterName.BREACH,
     roleType: CharacterRole.INITIATOR,
     backgroundColor: "#e15720",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.BREACH),
     id: 8,
     description: `Breach, the bionic Swede, fires powerful, targeted kinetic blasts to aggressively clear a path through enemy ground. The damage and disruption he inflicts ensures no fight is ever fair.`,
     images: {
@@ -275,11 +312,22 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+)
+export const charactersinfo: CharacterInfo[] = [
+  BRIMSTONE.info,
+  PHOENIX.info,
+  SOVA.info,
+  SAGE.info,
+CYPER.info, 
+VIPER.info,
+REYNA.info, 
+
   {
     name: CharacterName.OMEN,
     roleType: CharacterRole.CONTROLLER,
     id: 9,
     backgroundColor: "#7c7eb8",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.OMEN),
     description: `A phantom of a memory, Omen hunts in the shadows. He renders enemies blind, teleports across the field, then lets paranoia take hold as his foe scrambles to learn where he might strike next.`,
     images: {
       icon: {
@@ -299,6 +347,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.DUELIST,
     id: 10,
     backgroundColor: "#c2d1ea",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.JETT),
     description: `Representing her home country of South Korea, Jett's agile and evasive fighting style lets her take risks no one else can. She runs circles around every skirmish, cutting enemies before they even know what hit them.`,
     images: {
       icon: {
@@ -318,6 +367,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.DUELIST,
     id: 11,
     backgroundColor: "#fedf72",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.RAZE),
     description:
       "Raze explodes out of Brazil with her big personality and big guns. With her blunt-force-trauma playstyle, she excels at flushing entrenched enemies and clearing tight spaces with a generous dose of “boom.”",
     images: {
@@ -338,6 +388,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.INITIATOR,
     backgroundColor: "70883c",
     id: 12,
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.SKYE),
     description:
       "Hailing from Australia, Skye and her band of beasts trail-blaze the way through hostile territory. With her creations hampering the enemy, and her power to heal others, the team is strongest and safest by Skye’s side.",
     images: {
@@ -353,10 +404,12 @@ export const charactersinfo: CharacterInfo[] = [
       },
     },
   },
+  ASTRA.info
   {
     name: CharacterName.YORU,
     roleType: CharacterRole.DUELIST,
     backgroundColor: "#4986fe",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.YORU),
     id: 13,
     description:
       "Japanese native, Yoru, rips holes straight through reality to infiltrate enemy lines unseen. Using deception and aggression in equal measure, he gets the drop on each target before they know where to look.",
@@ -374,30 +427,11 @@ export const charactersinfo: CharacterInfo[] = [
     },
   },
   {
-    name: CharacterName.ASTRA,
-    roleType: CharacterRole.CONTROLLER,
-    backgroundColor: "#9844c2",
-    id: 14,
-    description:
-      "Ghanaian Agent Astra harnesses the energies of the cosmos to reshape battlefields to her whim. With full command of her astral form and a talent for deep strategic foresight, she's always eons ahead of her enemy's next move.",
-    images: {
-      icon: {
-        url: Characters.getImagePath(CharacterName.ASTRA, "icon"),
-      },
-      full: {
-        url: Characters.getImagePath(CharacterName.ASTRA, "full"),
-        rotation: 0,
-        scale: 1,
-        x: 0,
-        y: 25,
-      },
-    },
-  },
-  {
     name: CharacterName.KAYO,
     roleType: CharacterRole.INITIATOR,
     backgroundColor: "#9770f3",
     id: 15,
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.KAYO),
     description: `KAY/O is a machine of war built for a single purpose: neutralizing radiants. His power to suppress enemy abilities cripples his opponents' capacity to fight back, securing him and his allies the ultimate edge.`,
     images: {
       icon: {
@@ -417,6 +451,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.SENTINEL,
     id: 16,
     backgroundColor: "#b89a67",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.CHAMBER),
     description:
       "Well dressed and well armed, French weapons designer Chamber expels aggressors with deadly precision. He leverages his custom arsenal to hold the line and pick off enemies from afar, with a contingency built for every plan.",
     images: {
@@ -437,6 +472,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.DUELIST,
     backgroundColor: "#679aff",
     id: 17,
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.NEON),
     description:
       "Filipino Agent Neon surges forward at shocking speeds, discharging bursts of bioelectric radiance as fast as her body generates it. She races ahead to catch enemies off guard, then strikes them down quicker than lightning.",
     images: {
@@ -457,6 +493,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.INITIATOR,
     id: 18,
     backgroundColor: "#325b73",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.FADE),
     description:
       "Turkish bounty hunter, Fade, unleashes the power of raw nightmares to seize enemy secrets. Attuned with terror itself, she hunts targets and reveals their deepest fears—before crushing them in the dark.",
     images: {
@@ -477,6 +514,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.CONTROLLER,
     id: 19,
     backgroundColor: "#535452",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.HARBOR),
     description:
       "Hailing from India’s coast, Harbor storms the field wielding ancient technology with dominion over water. He unleashes frothing rapids and crushing waves to shield his allies and pummel those that oppose him.",
     images: {
@@ -497,6 +535,7 @@ export const charactersinfo: CharacterInfo[] = [
     roleType: CharacterRole.INITIATOR,
     id: 20,
     backgroundColor: "#b4d349",
+    habilities: HabilityFactory.getHabilitiesByCharacter(CharacterName.GEKKO),
     description:
       "Gekko the Angeleno leads a tight-knit crew of calamitous creatures. His buddies bound forward, scattering enemies out of the way, with Gekko chasing them down to regroup and go again.",
     images: {
@@ -516,6 +555,7 @@ export const charactersinfo: CharacterInfo[] = [
     name: CharacterName.DEADLOCK,
     roleType: CharacterRole.SENTINEL,
     id: 21,
+    habilities: HabilityFactory.getHabilitiesByCharacter( CharacterName.DEADLOCK),
     backgroundColor: "#958f90",
     description:
       "Norwegian operative Deadlock deploys an array of cutting-edge nanowire to secure the battlefield from even the most lethal assault. No one escapes her vigilant watch, nor survives her unyielding ferocity.",

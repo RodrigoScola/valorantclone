@@ -30,7 +30,7 @@ currentPlayer.army = [];
 const currentPlayingPlayer = new InGamePlayer([], -1);
 
 // routers
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   console.log(currentPlayer.army);
   res.render("index", {
     characters: characterSelectList.allCharacters,
@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
     canSelectMore: currentPlayer.canSelectMore(),
   });
 });
-app.get("/add", (req, res) => {
+app.get("/add", (_, res) => {
   if (
     currentPlayer.canSelectMore() &&
     currentPlayer.selectedCharacter &&
@@ -46,16 +46,16 @@ app.get("/add", (req, res) => {
   ) {
     currentPlayer.army.push(currentPlayer.selectedCharacter);
     characterSelectList.setUnavailable(currentPlayer.selectedCharacter.id);
-    currentPlayer.selectedCharacter = undefined;
+    currentPlayer.selectedCharacter = null;
   }
 
   res.render("partials/team", {
     team: currentPlayer.army,
   });
 });
-app.get("/reset", (req, res) => {
+app.get("/reset", (_, res) => {
   currentPlayer.army = [];
-  currentPlayer.selectedCharacter = undefined;
+  currentPlayer.selectedCharacter = null;
   characterSelectList.reset();
   console.log(characterSelectList.allCharacters);
   res.render("index", {
@@ -68,10 +68,9 @@ app.get("/select/:characterId", (req, res) => {
   const character = Characters.getCharacter(parseInt(req.params.characterId));
 
   currentPlayer.selectedCharacter = character;
-
   res.render("partials/selectedCharacter", {
     character: character.info,
-    role: RoleHandler.getRole(character.roleType),
+    role: RoleHandler.getRole(character.info.roleType),
   });
 });
 app.get("/select-character/:characterId", (req, res) => {
@@ -82,14 +81,14 @@ app.get("/select-character/:characterId", (req, res) => {
 
   currentPlayingPlayer.selectedCharacter = character;
 
-  console.log(character?.habilities);
+  console.log(character?.info.habilities);
 
   res.render("partials/habilities_tab", {
-    habilities: character?.habilities,
+    habilities: character?.info.habilities,
   });
 });
 
-app.get("/map", (req, res) => {
+app.get("/map", (_, res) => {
   currentPlayingPlayer.army = [];
   currentPlayer.army.forEach((char, i) => {
     currentPlayingPlayer.army.push(
@@ -122,7 +121,7 @@ app.get("/move/:x/:y", (req, res) => {
   });
 });
 
-app.get("/colors", (req, res) => {
+app.get("/colors", (_, res) => {
   const colors = charactersinfo.map(
     (x) => `.bg-${x.name} {
     background-color: ${x.backgroundColor}
